@@ -29,6 +29,8 @@ def prepare_table(cursor):
     results.append(tuple(header))
     for row in cursor:
         results.append(row)
+        print(str(type(row)))
+    print(results)
 
     return results
 
@@ -41,16 +43,6 @@ def save(out_file, table):
 
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) == 1:
-        print('usage: script <conf.yml>')
-        exit(1)
-    else:
-        conf = sys.argv[1]
-        if not os.path.exists(conf):
-            print('file not found: ' + conf)
-            exit(1)
-        with open(conf, 'r') as f:
-            conf = yaml.load(f)
-            main(conf)
-        exit(0)
+    with open('conf.yml', 'r') as f:
+        conf = yaml.load(f)
+        main(conf)
