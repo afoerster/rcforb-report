@@ -1,0 +1,14 @@
+---
+database_path: Database.db
+reports:
+  - name: top_10_logins.csv
+    query: select name, count(*) as num_logins from logins group by name order by count(*) desc limit 10
+  - name: last_100_command.csv
+    query: select name, date, command from radio_logs order by date desc limit 100
+  - name: top_100_commands.csv
+    query: select command, count(*) as count from radio_logs group by command order by count(*) desc limit 100
+  - name: total_logins.csv
+    query: select count(*) as num_logins from logins
+  - name: logins_last_30_days.csv
+    query: select name, ip, date, denied, reason from logins where date > date('now', '-30 days') order by date desc;
+
