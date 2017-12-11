@@ -5,15 +5,18 @@ import yaml
 import os.path
 
 REPORTS_DIR='reports'
+DATABASE_PATH='database_path'
+QUERY='query'
+NAME='name'
 
 def main(conf):
-    conn = sqlite3.connect(conf['database_path'])
-    if not os.path.exists('reports'):
+    conn = sqlite3.connect(conf[DATABASE_PATH])
+    if not os.path.exists(REPORTS_DIR):
         os.mkdir(REPORTS_DIR)
-    for report in conf['reports']:
-        cursor = conn.execute(report['query'])
+    for report in conf[REPORTS_DIR]:
+        cursor = conn.execute(report[QUERY])
         table = prepare_table(cursor)
-        save(os.path.join(REPORTS_DIR, report['name']), table)
+        save(os.path.join(REPORTS_DIR, report[NAME]), table)
 
 
 def prepare_table(cursor):
@@ -47,7 +50,7 @@ if __name__ == '__main__':
         if not os.path.exists(conf):
             print('file not found: ' + conf)
             exit(1)
-        with open('conf.yml', 'r') as f:
+        with open(conf, 'r') as f:
             conf = yaml.load(f)
             main(conf)
         exit(0)
