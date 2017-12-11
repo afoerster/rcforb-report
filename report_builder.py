@@ -29,8 +29,6 @@ def prepare_table(cursor):
     results.append(tuple(header))
     for row in cursor:
         results.append(row)
-        print(str(type(row)))
-    print(results)
 
     return results
 
