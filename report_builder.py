@@ -3,6 +3,7 @@ import sqlite3
 import csv
 import yaml
 import os.path
+import datetime
 
 REPORTS_DIR='reports'
 DATABASE_PATH='database_path'
@@ -16,7 +17,7 @@ def main(conf):
     for report in conf[REPORTS_DIR]:
         cursor = conn.execute(report[QUERY])
         table = prepare_table(cursor)
-        save(os.path.join(REPORTS_DIR, report[NAME]), table)
+        save(report[NAME], table)
 
 
 def prepare_table(cursor):
@@ -33,7 +34,15 @@ def prepare_table(cursor):
     return results
 
 
-def save(out_file, table):
+def save(report_name, table):
+    now = datetime.datetime.now()
+    date = "{}-{}-{}".format(now.year, now.month, now.day)
+    date_dir = os.path.join(REPORTS_DIR, date)
+    if not os.path.exists(date_dir):
+        os.mkdir(date_dir)
+
+    out_file = os.path.join(date_dir, report_name)
+
     with open(out_file, 'w') as f:
         wr = csv.writer(f)
         for row in table:
