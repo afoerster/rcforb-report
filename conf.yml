@@ -1,7 +1,7 @@
 ---
 database_path: Database.db
 reports:
-  - name: login_length_graph
+  - name: session_length_graph
     decscription: The length, in 5 minute increments, of every login session
     query: > 
 
