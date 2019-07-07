@@ -18,6 +18,8 @@ def main(conf):
         cursor = conn.execute(report[QUERY])
         table = prepare_table(cursor)
         save(report[NAME], table)
+    conn.close
+    print("Finished")
 
 
 def prepare_table(cursor):
@@ -35,6 +37,7 @@ def prepare_table(cursor):
 
 
 def save(report_name, table):
+    print("creating report '{}'.".format(report_name))
     now = datetime.datetime.now()
     date = "{}-{}-{}".format(now.year, now.month, now.day)
     date_dir = os.path.join(REPORTS_DIR, date)
@@ -42,14 +45,16 @@ def save(report_name, table):
         os.mkdir(date_dir)
 
     out_file = os.path.join(date_dir, report_name)
+    print("saving report to '{}'.".format(out_file))
 
     with open(out_file, 'w') as f:
         wr = csv.writer(f)
         for row in table:
             wr.writerow(row)
+    
 
 
 if __name__ == '__main__':
     with open('conf.yml', 'r') as f:
-        conf = yaml.load(f)
+        conf = yaml.load(f, Loader=yaml.FullLoader)
         main(conf)
