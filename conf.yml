@@ -1,5 +1,5 @@
 ---
-database_path: "C:\Program Files (x86)\KG6YPI\RCForb\Server\Database.db"
+database_path: C:\Program Files (x86)\KG6YPI\RCForb\Server\Database.db
   #   You may need to modify the above path if the command does not work for you!
 reports:
   - name: session_length_graph.csv
