@@ -5,7 +5,9 @@ reports:
     decscription: The length, in 5 minute increments, of every login session
     query: > 
 
-      with  logouts as (select name, ip, date as logout_date, cast(reply as int) as reply from radio_logs where command = 'disconnect')
+      with logouts as
+              (select name, ip, date as logout_date, cast(reply as int) as reply from radio_logs where command = 'disconnect'
+              and date BETWEEN datetime('now', '-30 days') AND datetime('now', 'localtime'))
       select name,
        ip,
        logout_date,
