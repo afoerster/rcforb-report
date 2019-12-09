@@ -5,12 +5,15 @@ reports:
     decscription: The length, in 5 minute increments, of every login session
     query: > 
 
-      with logouts as
-              (select name, ip, date as logout_date, cast(reply as int) as reply from radio_logs where command = 'disconnect'
-              and date BETWEEN datetime('now', '-30 days') AND datetime('now', 'localtime'))
-      select name,
-       ip,
-       logout_date,
+    with joined as (select users.club_member, radio_logs.name, radio_logs.ip, command, date as logout_date, cast(reply as int) as reply from radio_logs join users on radio_logs.name = users.name),
+
+    logouts as
+              (select * from joined where command = 'disconnect'
+              )
+      select logouts.name,
+       logouts.ip,
+       logouts.logout_date,
+       case logouts.club_member when 1 then 'yes' else 'no' end as club_member,
        '*' || substr(
                '*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************',
                0, reply / 5
