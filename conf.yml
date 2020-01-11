@@ -4,30 +4,24 @@ database_path: C:\Program Files (x86)\KG6YPI\RCForb\Server\Database.db
 reports:
   - name: session_length_graph.csv
     decscription: The length, in 5 minute increments, of every login session
-    query: > 
+    query: |
+      with joined as (select users.club_member, radio_logs.name, radio_logs.ip, command, date as logout_date, cast(reply as int) as reply from radio_logs join users on radio_logs.name = users.name),
 
-      with  logouts as (select name, ip, date as logout_date, cast(reply as int) as reply from radio_logs where command = 'disconnect')
-      select name,
-       ip,
-       logout_date,
+      logouts as
+              (select * from joined where command = 'disconnect'
+              )
+      select logouts.name,
+       logouts.ip,
+       logouts.logout_date,
+       case logouts.club_member when 1 then 'yes' else 'no' end as club_member,
        '*' || substr(
                '*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************',
                0, reply / 5
            ) as time
        from logouts order by logout_date desc
-  - name: top_10_logins.csv
-    description: Top users by number of logins
-    query: select name, count(*) as num_logins from logins group by name order by count(*) desc limit 10
-#  - name: last_100_command.csv
-#    description: Most recent commands run
-#    query: select name, date, command from radio_logs order by date desc limit 100
-#  - name: top_100_commands.csv
-#    description: Most common commands
-#    query: select command, count(*) as count from radio_logs group by command order by count(*) desc limit 100
   - name: total_logins.csv
     description: Total number of logins all-time
     query: select count(*) as num_logins from logins
   - name: logins_last_30_days.csv
     description: All logins in the last 30 days
     query: select name, ip, date, denied, reason from logins where date > date('now', '-30 days') order by date desc;
-

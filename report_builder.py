@@ -47,7 +47,7 @@ def save(report_name, table):
     out_file = os.path.join(date_dir, report_name)
     print("saving report to '{}'.".format(out_file))
 
-    with open(out_file, 'w') as f:
+    with open(out_file, 'w', newline='') as f:
         wr = csv.writer(f)
         for row in table:
             wr.writerow(row)
